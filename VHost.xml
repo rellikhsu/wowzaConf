@@ -74,7 +74,7 @@
 					<Algorithm>SunX509</Algorithm>
 					<CipherSuites></CipherSuites>
 					<Protocols></Protocols>
-					<AllowHttp2>false</AllowHttp2>
+					<AllowHttp2>true</AllowHttp2>
 				</SSLConfig>
 				<SocketConfiguration>
 					<ReuseAddress>true</ReuseAddress>
