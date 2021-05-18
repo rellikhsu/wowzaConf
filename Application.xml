@@ -22,17 +22,17 @@
 			${com.wowza.wms.AppHome} - Application home directory
 			${com.wowza.wms.ConfigHome} - Configuration home directory
 			${com.wowza.wms.context.VHost} - Virtual host name
-			${com.wowza.wms.context.VHostConfigHome} - Virtual host config directory
+			${com.wowza.wms.context.VHostConfigHome} - Virtual host home directory
 			${com.wowza.wms.context.Application} - Application name
 			${com.wowza.wms.context.ApplicationInstance} - Application instance name
 			
 		-->
 		<Streams>
-			<StreamType>live</StreamType>
+			<StreamType>live-lowlatency</StreamType>
 			<StorageDir>${com.wowza.wms.context.VHostConfigHome}/content</StorageDir>
 			<KeyDir>${com.wowza.wms.context.VHostConfigHome}/keys</KeyDir>
 			<!-- LiveStreamPacketizers (separate with commas): cupertinostreamingpacketizer, smoothstreamingpacketizer, sanjosestreamingpacketizer, mpegdashstreamingpacketizer, cupertinostreamingrepeater, smoothstreamingrepeater, sanjosestreamingrepeater, mpegdashstreamingrepeater, dvrstreamingpacketizer, dvrstreamingrepeater -->
-			<LiveStreamPacketizers>cmafstreamingpacketizer, cupertinostreamingpacketizer, mpegdashstreamingpacketizer, sanjosestreamingpacketizer, smoothstreamingpacketizer</LiveStreamPacketizers>
+			<LiveStreamPacketizers>cupertinostreamingpacketizer, mpegdashstreamingpacketizer, sanjosestreamingpacketizer, smoothstreamingpacketizer</LiveStreamPacketizers>
 			<!-- Properties defined here will override any properties defined in conf/Streams.xml for any streams types loaded by this application -->
 			<Properties>
 			</Properties>
@@ -96,7 +96,7 @@
 		<RTP>
 			<!-- RTP/Authentication/[type]Methods defined in Authentication.xml. Default setup includes; none, basic, digest -->
 			<Authentication>
-				<PublishMethod>digest</PublishMethod>
+				<PublishMethod>none</PublishMethod>
 				<PlayMethod>none</PlayMethod>
 			</Authentication>
 			<!-- RTP/AVSyncMethod. Valid values are: senderreport, systemclock, rtptimecode -->
@@ -113,6 +113,29 @@
 			<Properties>
 			</Properties>
 		</RTP>
+		<WebRTC>
+			<!--  Enable WebRTC publishing to this application -->
+			<EnablePublish>false</EnablePublish>
+			<!-- Enable WebRTC playback from this application -->
+			<EnablePlay>false</EnablePlay>
+			<!--  Enable query of published stream names for this application -->
+			<EnableQuery>false</EnableQuery>
+			<!--  IP address, transport, and port used for WebRTC streaming. -->
+			<!--TCP format: [wowza-streaming-engine-external-ip-address],tcp,[port] -->
+			<!--UDP format: [wowza-streaming-engine-external-ip-address],udp -->
+			<IceCandidateIpAddresses>127.0.0.1,tcp,1935</IceCandidateIpAddresses>
+			<!-- Local IP address of the network card you want to use for WebRTC UDP traffic -->
+			<UDPBindAddress></UDPBindAddress>
+			<!-- Comma-deliniated list of audio codecs, in order of preference, for stream ingestion -->
+			<PreferredCodecsAudio>opus,pcmu,pcma</PreferredCodecsAudio>
+			<!-- Comma-deliniated list of video codecs, in order of preference, for stream ingestion -->
+			<PreferredCodecsVideo>vp8,h264</PreferredCodecsVideo>
+			<!-- Enable WebRTC debug logging -->
+			<DebugLog>false</DebugLog>
+			<!-- Properties for WebRTC -->
+			<Properties>
+			</Properties>
+		</WebRTC>
 		<MediaCaster>
 			<RTP>
 				<RTSP>
@@ -159,11 +182,6 @@
 		<LiveStreamPacketizer>
 			<!-- Properties defined here will override any properties defined in conf/LiveStreamPacketizers.xml for any LiveStreamPacketizers loaded by this applications -->
 			<Properties>
-				<Property>
-				<Name>cmafLLEnableLowLatency</Name>
-				<Value>true</Value>
-				<Type>Boolean</Type>
-				</Property>
 			</Properties>
 		</LiveStreamPacketizer>
 		<HTTPStreamer>
@@ -178,7 +196,7 @@
 		</Manager>
 		<Repeater>
 			<OriginURL></OriginURL>
-			<QueryString><![CDATA[]]></QueryString>
+			<QueryString></QueryString>
 		</Repeater>
 		<StreamRecorder>
 			<Properties>
@@ -209,9 +227,9 @@
 		<!-- Properties defined here will be added to the IApplication.getProperties() and IApplicationInstance.getProperties() collections -->
 		<Properties>
 			<Property>
-				<Name>securityPublishRequirePassword</Name>
-				<Value>true</Value>
-				<Type>Boolean</Type>
+				<Name>pushPublishMapPath</Name>
+				<Value>${com.wowza.wms.context.VHostConfigHome}/conf/${com.wowza.wms.context.Application}/PushPublishMap.txt</Value>
+				<Type>String</Type>
 			</Property>
 		</Properties>
 	</Application>
